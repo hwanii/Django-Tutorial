@@ -18,9 +18,11 @@ def detail(request, question_id):
 
 
 def results(request, question_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
-
+    question = Question.objects.get(pk=question_id)
+    context = {
+        'question': question
+    }
+    return render(request, 'polls/results.html', context)
 
 def vote(request, question_id):
     pk = request.POST['choice']

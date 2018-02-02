@@ -8,17 +8,20 @@
     <title>Polls</title>
 </head>
 <body>
-{% if question %}
     <h1>{{ question.question_text }}</h1>
-    <ul>
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+    <form action="{% url 'polls:vote' question.pk %}" method="POST">
+        {% csrf_token %}
         {% for choice in question.choice_set.all %}
-        <li>
-            {{ choice.choice_text }}
-        </li>
+        {# forloop.counter는 1부터 시작함 #}
+{#      {# radio type의 input은 name이 같다면 같은 name 중에 하나만 선택 가능하게 됨. #}
+        <input type="radio" id="choice{{ forloop.counter }}" value="{{ choice.id }}" name="choice">
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
         {% endfor %}
-    </ul>
-{% else %}
-<p>No question.</p>
-{% endif %}
+        <button type="submit">Vote</button>
+    </form>
 </body>
 </html>

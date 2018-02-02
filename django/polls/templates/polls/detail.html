@@ -19,7 +19,7 @@
         {# forloop.counter는 1부터 시작함 #}
 {#      {# radio type의 input은 name이 같다면 같은 name 중에 하나만 선택 가능하게 됨. #}
         <input type="radio" id="choice{{ forloop.counter }}" value="{{ choice.id }}" name="choice">
-        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}({{ choice.pk }})</label>
         {% endfor %}
         <button type="submit">Vote</button>
     </form>

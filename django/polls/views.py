@@ -1,8 +1,8 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 
-from polls.models import Question
+from polls.models import Question, Choice
 
 
 def detail(request, question_id):
@@ -10,7 +10,7 @@ def detail(request, question_id):
     #     question = Question.objects.get(pk=question_id)
     # except Question.DoesNotExist:
     #     raise Http404('Question does not exist')
-    question = get_object_or_404(Question, pk=question_id) # 에러가 빈번하게 발생하기 때문에 shortcut으로 존재함.
+    question = get_object_or_404(Question, pk=question_id)  # 에러가 빈번하게 발생하기 때문에 shortcut으로 존재함.
     context = {
         'question': question
     }
@@ -23,7 +23,12 @@ def results(request, question_id):
 
 
 def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+    pk = request.POST['choice']
+    # 어차피 Choice 테이블에 question_id가 있기 때문에 question이 어떤것인지 확인할 필요없이 votes 값을 증가시키면 됨.
+    choice = Choice.objects.get(pk=pk)
+    choice.votes += 1
+    choice.save()
+    return redirect('polls:results', question_id=question_id)
 
 
 def index(request):
